@@ -1,0 +1,83 @@
+###Sign-up
+POST http://localhost:3001/users
+Content-Type: application/json
+
+{
+    "firstName": "Ngan",
+    "lastName": "Le",
+    "email": "lengan@gmail.com",
+    "password": "123123",
+    "posts": []
+}
+
+###Update-User-Using-Token
+PUT http://localhost:3001/auth/users
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRhbnRyYW4yODAyQGdtYWlsLmNvbSIsInVzZXJJZCI6MiwiaWF0IjoxNzE0Mjg3MDExLCJleHAiOjE3MTQzNzM0MTF9.Bxga5JxlrYODVvA1nl2zOcFnXK5WXZK6WfiPxLQKQMg
+
+{
+    "firstName": "Tannnn",
+    "lastName": "Trann",
+    "email": "",
+    "password": ""
+}
+
+###Find-Owned-User-Using-Token
+GET http://localhost:3001/auth/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRhbnRyYW4yODAyQGdtYWlsLmNvbSIsInVzZXJJZCI6MiwiaWF0IjoxNzE0Mjg3MDExLCJleHAiOjE3MTQzNzM0MTF9.Bxga5JxlrYODVvA1nl2zOcFnXK5WXZK6WfiPxLQKQMg
+
+###Login¸
+POST http://localhost:3001/auth/login
+Content-Type: application/json
+
+{
+    "email": "tantran2802@gmail.com",
+    "password": "123123"
+}
+
+###Search-Using-Keyword
+GET http://localhost:3001/posts/search?keyword=ewkllwekckle
+
+
+###Posting-Using-Token
+POST http://localhost:3001/posts
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRhbnRyYW4yODAyQGdtYWlsLmNvbSIsInVzZXJJZCI6MiwiaWF0IjoxNzE1MTg0ODk3LCJleHAiOjE3MTUxODg0OTd9.3dADejkibq2-Fb23UrhqT4ZUUpuO2FmYhSfs5iPZ60w
+
+{
+    "content": "Hello name\nPlease",
+    "images": ["https://i.pinimg.com/736x/63/8f/e3/638fe33412a4d1de766b126497f4ef42.jpg", "https://i.pinimg.com/564x/e8/3b/4f/e83b4f5a00d83a975707eab32af8d5ea.jpg"]
+}
+
+###Find-All-Posts-Publicly-Pagination
+GET http://localhost:3001/posts
+
+
+###Find-Posts-By-Id-Optional
+GET http://localhost:3001/posts/user?option=1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRhbnRyYW4yODAyQGdtYWlsLmNvbSIsInVzZXJJZCI6MiwiaWF0IjoxNzE0OTA2OTUyLCJleHAiOjE3MTQ5MTA1NTJ9.Ygg8DA7LLngL3dSRV1JFnIktCwJR-e1VquoqZd3kJN0
+
+
+###Create-Image-From-Post
+POST http://localhost:3001/posts/6/images
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRhbnRyYW4yODAyQGdtYWlsLmNvbSIsInVzZXJJZCI6MiwiaWF0IjoxNzE0NzMyMzE3LCJleHAiOjE3MTQ3MzU5MTd9.RU7pLHD5o5VECEPJizukja9aN6UkxIMyoWTP6Denl9A
+
+{
+    "urls": ["https://i.pinimg.com/564x/35/4d/93/354d933b42faaa6fcb14832825e88a93.jpg", "https://i.pinimg.com/564x/0d/b4/6d/0db46d0fd1163fafd2fd3598e1e9727d.jpg"]
+}
+
+###
+GET http://localhost:3001/posts/all
+
+###
+PUT http://localhost:3001/posts/1
+Content-Type: application/json
+
+{
+    "content": "",
+    "images": []
+}
+
+
+
