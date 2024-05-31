@@ -1,8 +1,8 @@
 [build]
   base = ""
-  publish = "dist"
+  publish = ""
   command = "npm install -g @nestjs/cli && npm install && npm run build"
 
 
 [functions]
-  directory = "dist"
+  directory = ""
