@@ -1,0 +1,7 @@
+[build]
+  base = "" # Leave empty if in root, or set to "backend" if in subdirectory
+  publish = "netlify/functions"
+  command = "npm install && npm run build"
+
+[functions]
+  directory = "netlify/functions"
