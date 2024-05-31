@@ -12,7 +12,9 @@ import { Image } from './images/image.entity';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 @Module({
-  imports: [ConfigModule.forRoot(),
+  imports: [ConfigModule.forRoot({
+    isGlobal: true,
+  }),
     TypeOrmModule.forRoot({
     type: 'postgres',
     database: process.env.DB_NAME,
