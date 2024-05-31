@@ -1,8 +1,0 @@
-[build]
-  base = ""
-  publish = ""
-  command = "npm run build && npm start"
-
-
-[functions]
-  directory = ""
