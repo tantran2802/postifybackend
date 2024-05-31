@@ -1,7 +1,7 @@
 [build]
   base = ""
   publish = ""
-  command = "npm install -g @nestjs/cli && npm install && npm run build"
+  command = "npm run build && npm start"
 
 
 [functions]
