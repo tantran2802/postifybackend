@@ -2,7 +2,9 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IPaginationOptions, paginate, Pagination } from 'nestjs-typeorm-paginate';
+import { UpdateImageDto } from 'src/images/dto/update-image-dto';
 import { Image } from 'src/images/image.entity';
+import { ImagesService } from 'src/images/images.service';
 import { User } from 'src/users/user.entity';
 import { Repository, UpdateResult } from 'typeorm';
 import { CreatePostDto } from './dto/create-post-dto';
@@ -44,16 +46,18 @@ export class PostsService {
         delete returnPost.user
         return returnPost;
     }
-    async update(id: number, updatePostDto: UpdatePostDto): Promise<UpdateResult>{
-        const post = await this.postRepo.findOneById(id);
-        if(updatePostDto.content.length != 0){
-            post.content = updatePostDto.content;
+    async update(id: number, updatePostDto: UpdatePostDto, token: string): Promise<UpdateResult>{
+        const decodedToken = this.jwtServ.decode(token);
+        const posts = await this.postRepo.findBy({user: decodedToken.userId});
+        if(posts.length == 0) throw new HttpException('There is no post', HttpStatus.BAD_REQUEST);
+        else {
+            const matchedPost = posts.filter((post) => post.id == id)[0]
+            if(updatePostDto.content.length != 0){
+                matchedPost.content = updatePostDto.content;
+                delete matchedPost.images
+                return this.postRepo.update(id, matchedPost);
+            }
         }
-        if(updatePostDto.images.length != 0){
-            const images = await this.imgRepo.findByIds(updatePostDto.images);
-            post.images.push(...images);
-        }
-        return this.postRepo.update(id, post);
     }
     async findContentByKeyword(keyword: string): Promise<Posts[]>{
         const posts: Posts[] = await this.postRepo.createQueryBuilder('p')
@@ -82,5 +86,44 @@ export class PostsService {
     }
     async findAllPosts(): Promise<Posts[]>{
         return this.postRepo.find();
+    }
+    async updateImagesViaPostId(id: number, imageId: number, updateImgDto: UpdateImageDto, token: string): Promise<UpdateResult>{
+        const decodedToken = this.jwtServ.decode(token);
+        const posts = await this.postRepo.findBy({user: decodedToken.userId});
+        if(posts.length == 0) throw new HttpException('There is no post', HttpStatus.BAD_REQUEST);
+        else {
+            const matchedPost = posts.filter((post) => post.id == id)[0];
+            if (!matchedPost) throw new HttpException('There is no post', HttpStatus.BAD_REQUEST);
+            else {
+                const matchedImage = matchedPost.images.filter((image) => image.id == imageId)[0]
+                if (!matchedImage) throw new HttpException('There is no image', HttpStatus.BAD_REQUEST);
+                else{
+                    if (updateImgDto.url.length == 0) throw new HttpException('The url is empty', HttpStatus.BAD_REQUEST);
+                    else{
+                        matchedImage.urlAddress = updateImgDto.url;
+                        return this.imgRepo.update(imageId, matchedImage);
+                    }
+                }
+            }
+        }
+    }
+    async findImageViaPostIdAndImageId(id: number, imageId: number, updateImgDto: UpdateImageDto, token: string): Promise<Image>{
+        const decodedToken = this.jwtServ.decode(token);
+        const posts = await this.postRepo.findBy({user: decodedToken.userId});
+        if(posts.length == 0) throw new HttpException('There is no post', HttpStatus.BAD_REQUEST);
+        else{
+            const matchedPost = posts.filter((post) => post.id == id)[0];
+            if (!matchedPost) throw new HttpException('There is no post', HttpStatus.BAD_REQUEST);
+            else{
+                const matchedImage = matchedPost.images.filter((image) => image.id == imageId)[0]
+                if (!matchedImage) throw new HttpException('There is no image', HttpStatus.BAD_REQUEST);
+                else{
+                    return matchedImage;
+                }
+            }
+        }
+    }
+    async findPostById(id: number): Promise<Posts>{
+        return this.postRepo.findOneById(id);
     }
 }

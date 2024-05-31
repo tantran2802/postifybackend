@@ -27,4 +27,9 @@ export class AuthController {
             const token = req.headers.authorization.split(' ')[1];
             return this.userService.updateUser(token, updateUserDto);
     }
+    @Put('valid')
+    checkValidToken(@Req() req): Promise<{valid: string}>{
+        const token = req.headers.authorization.split(' ')[1];
+        return this.authService.checkValidToken(token);
+    }
 }

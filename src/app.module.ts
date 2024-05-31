@@ -3,29 +3,34 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersController } from './users/users.controller';
 import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { LoggerMiddleware } from './common/middleware/logger/logger.middleware';
 import { User } from './users/user.entity';
 import { Posts } from './posts/post.entity';
-import { PostsController } from './posts/posts.controller';
-import { ImagesModule } from './images/images.module';
 import { Image } from './images/image.entity';
 import { AuthModule } from './auth/auth.module';
-import { JwtModule } from '@nestjs/jwt';
-import { authConstants } from './common/constants/auth.constants';
-
+import { ConfigModule } from '@nestjs/config';
 @Module({
-  imports: [TypeOrmModule.forRoot({
+  imports: [ConfigModule.forRoot(),
+    TypeOrmModule.forRoot({
     type: 'postgres',
-    database: 'education',
-    host: 'localhost',
-    port: 5432,
-    username: 'company',
+    database: process.env.DB_NAME,
+    host: process.env.DB_HOST,
+    port: parseInt(process.env.DB_PORT, 10),
+    username: process.env.DB_USERNAME,
+    // password: process.env.DB_PASSWORD,
+    autoLoadEntities: true,
     entities: [User, Posts, Image],
     // schema
-    synchronize: true
+    synchronize: true,
+    /* ssl: {
+      rejectUnauthorized: false, // Change to true in production with a valid CA
+      // Example of adding CA, key, and cert:
+      // ca: fs.readFileSync('path/to/server-ca.pem').toString(),
+      // key: fs.readFileSync('path/to/client-key.pem').toString(),
+      // cert: fs.readFileSync('path/to/client-cert.pem').toString(),
+    } */
 
   }),
   UsersModule,

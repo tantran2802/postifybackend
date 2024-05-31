@@ -22,10 +22,7 @@ export class ImagesService {
     async findOneById(id: number): Promise<Image>{
         return this.imageRepo.findOneById(id);
     }
-/*     async findOneByPostId(id: number): Promise<Image>{
-        const post = await this.postRepo.findOneById(id);
-        return this.imageRepo.findOneBy(post);
-    } */
+
     async deleteImage(id: number): Promise<DeleteResult>{
         return this.imageRepo.delete(id);
     }

@@ -13,7 +13,7 @@ export class Posts {
     @Column()
     content: string;
 
-    @OneToMany(() => Image, (image) => image.post, {eager: true})
+    @OneToMany(() => Image, (image) => image.post, {eager: true, cascade: ['update']})
     images: Image[];
 
     @Column({ type: "timestamptz",

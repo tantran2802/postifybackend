@@ -24,14 +24,19 @@ export class PostsController {
     }
     @Get('search')
     findPostByContent(@Query('keyword')keyword: string): Promise<Posts[]>{
-        return this.postService.findContentByKeyword(keyword);
+        try {
+            return this.postService.findContentByKeyword(keyword);
+        }catch(e) {
+            throw e;
+        }
     }
     @Put(':id')
     @UseGuards(JwtAuthGuard)
-    updatePost(@Param('id', ParseIntPipe)id: number,
+    updatePost(@Req()req, @Param('id', ParseIntPipe)id: number,
     @Body()updatePostDto: UpdatePostDto): Promise<UpdateResult>
     {
-        return this.postService.update(id, updatePostDto);
+        const token = req.headers.authorization.split(' ')[1];
+        return this.postService.update(id, updatePostDto, token);
     }
     @Get('user')
     @UseGuards(JwtAuthGuard)
@@ -47,6 +52,25 @@ export class PostsController {
         @Body()imageDto: CreateImageDto): Promise<Image[]>{
             const token = req.headers.authorization.split(' ')[1];
             return this.imageService.createImage(id, imageDto, token);
+    }
+
+    @Put(':id/images/:imageId')
+    @UseGuards(JwtAuthGuard)
+    updateImg(@Req() req, 
+            @Param('id', ParseIntPipe)id: number,
+            @Param('imageId', ParseIntPipe)imageId: number,
+            @Body()imageDto: UpdateImageDto): Promise<UpdateResult>{
+                const token = req.headers.authorization.split(' ')[1];
+                return this.postService.updateImagesViaPostId(id, imageId, imageDto, token);
+    }
+    @Get(':id/images/:imageId')
+    @UseGuards(JwtAuthGuard)
+    findImageViaPostIdAndImageId(@Req() req, 
+    @Param('id', ParseIntPipe)id: number,
+    @Param('imageId', ParseIntPipe)imageId: number,
+    @Body()imageDto: UpdateImageDto): Promise<Image>{
+        const token = req.headers.authorization.split(' ')[1];
+        return this.postService.findImageViaPostIdAndImageId(id, imageId, imageDto, token);
     }
 
     @Get()
@@ -65,5 +89,9 @@ export class PostsController {
     @Get('all')
     findAllPosts(): Promise<Posts[]>{
         return this.postService.findAllPosts();
+    }
+    @Get(':id')
+    findPostById(@Param('id')id: number): Promise<Posts>{
+        return this.postService.findPostById(id);
     }
 }

@@ -26,4 +26,21 @@ export class AuthService {
             return {accessToken: this.jwtService.sign(payload)}
         }else throw new UnauthorizedException('Password does not match!')
     }
+    async checkValidToken(token: string): Promise<{valid: string}>{
+        // const decodedToken = await this.jwtService.decode(token);
+        // console.log(decodedToken);
+        try {
+            // Verify the token and check its expiration
+            const decoded = await this.jwtService.verify(token);
+            return {valid: 'Valid'};
+          } catch (error) {
+            if (error.name === 'TokenExpiredError') {
+                return {valid: 'TokenExpiredError'}
+            //   throw new UnauthorizedException('Token has expired');
+            } else {
+                return {valid: 'Invalid token'}
+            //   throw new UnauthorizedException('Invalid token');
+            }
+        }
+    }
 }

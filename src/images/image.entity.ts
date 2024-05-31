@@ -9,7 +9,7 @@ export class Image{
     @Column()
     urlAddress: string;
 
-    @ManyToOne(() => Posts, (post) => post.images, {eager: false, cascade: true})
+    @ManyToOne(() => Posts, (post) => post.images, {eager: false, cascade: ['update']})
     post: Posts;
     
 }
