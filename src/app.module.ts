@@ -19,18 +19,18 @@ import { ConfigModule } from '@nestjs/config';
     host: process.env.DB_HOST,
     port: parseInt(process.env.DB_PORT, 10),
     username: process.env.DB_USERNAME,
-    // password: process.env.DB_PASSWORD,
+    password: process.env.DB_PASSWORD,
     autoLoadEntities: true,
     entities: [User, Posts, Image],
     // schema
     synchronize: true,
-    /* ssl: {
+    ssl: {
       rejectUnauthorized: false, // Change to true in production with a valid CA
       // Example of adding CA, key, and cert:
       // ca: fs.readFileSync('path/to/server-ca.pem').toString(),
       // key: fs.readFileSync('path/to/client-key.pem').toString(),
       // cert: fs.readFileSync('path/to/client-cert.pem').toString(),
-    } */
+    }
 
   }),
   UsersModule,
